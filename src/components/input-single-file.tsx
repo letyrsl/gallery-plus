@@ -71,9 +71,9 @@ export default function InputSingleFile({ form, size, error, allowedExtensions, 
                     <div className={inputSingleFileVariants({ size })}>
                         <Icon svg={UploadFileIcon} className={inputSingleFileIconVariants({ size })} />
                         <Text variant="label-medium" className="text-placeholder text-center">
-                            Arraste o arquivo arquivo
+                            Drag a file
                             <br />
-                            ou clique para selecionar
+                            or click to select file
                         </Text>
                     </div>
                 </div>
@@ -81,13 +81,13 @@ export default function InputSingleFile({ form, size, error, allowedExtensions, 
                 <div className="flex flex-col gap-1 mt-1">
                     {formFile && !isValidExtension() &&
                         <Text variant="label-small" className="text-accent-red">
-                            Tipo de arquivo inválido
+                            The file type is invalid
                         </Text>
                     }
 
                     {formFile && !isValidSize() &&
                         <Text variant="label-small" className="text-accent-red">
-                            O tamanho do arquivo ultrapassa o máximo
+                            The file size exceeds the max
                         </Text>
                     }
 
@@ -117,7 +117,7 @@ export default function InputSingleFile({ form, size, error, allowedExtensions, 
                                 className={textVariants({ variant: "label-small", className: "text-accent-red cursor-pointer hover:underline" })}
                                 onClick={() => { form.setValue(name, undefined) }}
                             >
-                                Remover
+                                Remove
                             </button>
                         </div>
                     </div>
