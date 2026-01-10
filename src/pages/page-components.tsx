@@ -1,23 +1,24 @@
-import Button from "../components/button";
-import ButtonIcon from "../components/button-icon";
-import ChevronLeftIcon from "../assets/icons/chevron-left.svg?react";
-import ChevronRightIcon from "../assets/icons/chevron-right.svg?react";
-import Badge from "../components/badge";
-import Alert from "../components/alert";
-import Divider from "../components/divider";
-import InputText from "../components/input-text";
-import SearchIcon from "../assets/icons/search.svg?react";
-import InputCheckbox from "../components/input-checkbox";
-import InputSingleFile from "../components/input-single-file";
-import { useForm } from "react-hook-form";
-import ImagePreview from "../components/image-preview";
-import { Dialog, DialogClose, DialogTrigger } from "@radix-ui/react-dialog";
-import { DialogBody, DialogContent, DialogFooter, DialogHeader } from "../components/dialog";
-import Text from "../components/text";
+import { Dialog, DialogClose, DialogTrigger } from '@radix-ui/react-dialog';
+import { useForm } from 'react-hook-form';
+
+import ChevronLeftIcon from '@src/assets/icons/chevron-left.svg?react';
+import ChevronRightIcon from '@src/assets/icons/chevron-right.svg?react';
+import SearchIcon from '@src/assets/icons/search.svg?react';
+import Alert from '@src/components/alert';
+import Badge from '@src/components/badge';
+import Button from '@src/components/button';
+import ButtonIcon from '@src/components/button-icon';
+import { DialogBody, DialogContent, DialogFooter, DialogHeader } from '@src/components/dialog';
+import Divider from '@src/components/divider';
+import ImagePreview from '@src/components/image-preview';
+import InputCheckbox from '@src/components/input-checkbox';
+import InputSingleFile from '@src/components/input-single-file';
+import InputText from '@src/components/input-text';
+import Text from '@src/components/text';
 
 export default function PageComponents() {
     const form = useForm();
-    const file = form.watch("file");
+    const file = form.watch('file');
     const fileSource = file?.[0] ? URL.createObjectURL(file[0]) : undefined;
 
     return (
@@ -76,7 +77,7 @@ export default function PageComponents() {
                     allowedExtensions={['png', 'jpg', 'jpeg', 'webp']}
                     maxFileSizeInMB={50}
                     replaceBy={<ImagePreview src={fileSource} alt="Preview" />}
-                    {...form.register("file")}
+                    {...form.register('file')}
                 />
             </div>
 
@@ -89,7 +90,9 @@ export default function PageComponents() {
                     <DialogContent>
                         <DialogHeader>Teste dialog</DialogHeader>
                         <DialogBody>
-                            <Text as="div" className="mb-4">Teste de conteudo do dialog</Text>
+                            <Text as="div" className="mb-4">
+                                Teste de conteudo do dialog
+                            </Text>
                         </DialogBody>
                         <DialogFooter>
                             <DialogClose asChild>

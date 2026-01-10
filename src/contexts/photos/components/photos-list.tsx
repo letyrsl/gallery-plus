@@ -1,7 +1,9 @@
-import Skeleton from "../../../components/skeleton";
-import Text from "../../../components/text";
-import type { Photo } from "../models/photo";
-import PhotoWidget from "./photo-widget";
+import Skeleton from '@src/components/skeleton';
+import Text from '@src/components/text';
+
+import PhotoWidget from './photo-widget';
+
+import type { Photo } from '@src/contexts/photos/models/photo';
 
 interface PhotoListProps {
     photos: Photo[];
@@ -11,27 +13,27 @@ interface PhotoListProps {
 export default function PhotosList({ photos, loading }: PhotoListProps) {
     return (
         <div className="space-y-6">
-            <Text as="div" variant="paragraph-large" className="flex items-center justify-end gap-1 text-accent-span">
-                Total:{" "}
-                {!loading ? (
-                    <div>{photos.length}</div>
-                ) : (
-                    <Skeleton className="w-6 h-6" />
-                )}
+            <Text
+                as="div"
+                variant="paragraph-large"
+                className="flex items-center justify-end gap-1 text-accent-span"
+            >
+                Total: {!loading ? <div>{photos.length}</div> : <Skeleton className="w-6 h-6" />}
             </Text>
 
             {!loading && photos?.length > 0 && (
                 <div className="grid grid-cols-5 gap-9">
-                    {photos.map(photo => (
+                    {photos.map((photo) => (
                         <PhotoWidget key={photo.id} photo={photo} />
                     ))}
                 </div>
             )}
 
             <div className="grid grid-cols-5 gap-9">
-                {loading && Array.from({ length: 10 }).map((_, index) => (
-                    <PhotoWidget key={`photo-loading-${index}`} photo={{} as Photo} loading />
-                ))}
+                {loading &&
+                    Array.from({ length: 10 }).map((_, index) => (
+                        <PhotoWidget key={`photo-loading-${index}`} photo={{} as Photo} loading />
+                    ))}
             </div>
 
             {!loading && photos.length === 0 && (

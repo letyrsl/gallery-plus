@@ -1,38 +1,48 @@
-import React from "react";
-import { Dialog, DialogBody, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from "../../../components/dialog";
-import Button from "../../../components/button";
-import InputText from "../../../components/input-text";
-import Text from "../../../components/text";
-import SelectCheckboxIllustration from "../../../assets/images/select-checkbox.svg?react"
-import Skeleton from "../../../components/skeleton";
-import PhotoImageSelectable from "../../photos/components/photo-image-selectable";
-import usePhotos from "../../photos/hooks/use-photos";
-import { useForm } from "react-hook-form";
-import { albumNewFormSchema, type AlbumNewFormSchema } from "../schemas";
-import { zodResolver } from "@hookform/resolvers/zod";
-import useAlbum from "../hooks/use-album";
+import React, { useState, useTransition, useEffect } from 'react';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+
+import SelectCheckboxIllustration from '@src/assets/images/select-checkbox.svg?react';
+import Button from '@src/components/button';
+import {
+    Dialog,
+    DialogBody,
+    DialogClose,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTrigger,
+} from '@src/components/dialog';
+import InputText from '@src/components/input-text';
+import Skeleton from '@src/components/skeleton';
+import Text from '@src/components/text';
+import useAlbum from '@src/contexts/albums/hooks/use-album';
+import { albumNewFormSchema, type AlbumNewFormSchema } from '@src/contexts/albums/schemas';
+import PhotoImageSelectable from '@src/contexts/photos/components/photo-image-selectable';
+import usePhotos from '@src/contexts/photos/hooks/use-photos';
 
 interface AlbumNewDialogProps {
     trigger: React.ReactNode;
 }
 
 export default function AlbumNewDialog({ trigger }: AlbumNewDialogProps) {
-    const [modalOpen, setModalOpen] = React.useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
     const form = useForm<AlbumNewFormSchema>({
         resolver: zodResolver(albumNewFormSchema),
     });
     const { photos, isLoadingPhotos } = usePhotos();
     const { createAlbum } = useAlbum();
-    const [isCreatingAlbum, setIsCreatingAlbum] = React.useTransition();
+    const [isCreatingAlbum, setIsCreatingAlbum] = useTransition();
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!modalOpen) {
             form.reset();
         }
-    }, [modalOpen, form])
+    }, [modalOpen, form]);
 
     function handleTogglePhoto(selected: boolean, photoId: string) {
-        const photosIds = form.getValues("photosIds") || [];
+        const photosIds = form.getValues('photosIds') || [];
         let newValue = [];
 
         if (selected) {
@@ -41,7 +51,7 @@ export default function AlbumNewDialog({ trigger }: AlbumNewDialogProps) {
             newValue = photosIds.filter((id) => id !== photoId);
         }
 
-        form.setValue("photosIds", newValue);
+        form.setValue('photosIds', newValue);
     }
 
     function handleSubmit(payload: AlbumNewFormSchema) {
@@ -51,61 +61,77 @@ export default function AlbumNewDialog({ trigger }: AlbumNewDialogProps) {
         });
     }
 
-    return <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-        <DialogTrigger asChild>{trigger}</DialogTrigger>
+    return (
+        <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+            <DialogTrigger asChild>{trigger}</DialogTrigger>
 
-        <DialogContent>
-            <form onSubmit={form.handleSubmit(handleSubmit)}>
-                <DialogHeader>Create album</DialogHeader>
+            <DialogContent>
+                <form onSubmit={form.handleSubmit(handleSubmit)}>
+                    <DialogHeader>Create album</DialogHeader>
 
-                <DialogBody className="flex flex-col gap-5">
-                    <InputText
-                        placeholder="Add a title"
-                        error={form.formState.errors.title?.message}
-                        {...form.register("title")}
-                    />
+                    <DialogBody className="flex flex-col gap-5">
+                        <InputText
+                            placeholder="Add a title"
+                            error={form.formState.errors.title?.message}
+                            {...form.register('title')}
+                        />
 
-                    <div className="space-y-3">
-                        <Text as="div" variant="label-small">Created photos</Text>
-
-                        {!isLoadingPhotos && photos.length > 0 && <div className="flex flex-wrap gap-2">
-                            {photos.map(photo => <PhotoImageSelectable
-                                key={photo.id}
-                                src={`${import.meta.env.VITE_IMAGES_URL}/${photo.imageId}`}
-                                title={photo.title}
-                                imageClassName="w-20 h-20"
-                                onSelectImage={(selected) => handleTogglePhoto(selected, photo.id)}
-                            />)}
-                        </div>}
-
-                        {isLoadingPhotos && <div className="flex flex-wrap gap-2">
-                            {Array.from({ length: 4 }).map((_, index) => (
-                                <Skeleton key={`photo-loading-${index}`} className="w-20 h-20 rounded-lg" />
-                            ))}
-                        </div>}
-
-                        {!isLoadingPhotos && photos.length === 0 && <div className="w-full flex flex-col justify-center items-center gap-3">
-                            <SelectCheckboxIllustration />
-                            <Text variant="paragraph-medium" className="text-center">
-                                No photos available for selection
+                        <div className="space-y-3">
+                            <Text as="div" variant="label-small">
+                                Created photos
                             </Text>
-                        </div>}
-                    </div>
-                </DialogBody>
 
-                <DialogFooter>
-                    <DialogClose asChild>
-                        <Button variant="secondary" disabled={isCreatingAlbum}>
-                            Cancel
+                            {!isLoadingPhotos && photos.length > 0 && (
+                                <div className="flex flex-wrap gap-2">
+                                    {photos.map((photo) => (
+                                        <PhotoImageSelectable
+                                            key={photo.id}
+                                            src={`${import.meta.env.VITE_IMAGES_URL}/${photo.imageId}`}
+                                            title={photo.title}
+                                            imageClassName="w-20 h-20"
+                                            onSelectImage={(selected) =>
+                                                handleTogglePhoto(selected, photo.id)
+                                            }
+                                        />
+                                    ))}
+                                </div>
+                            )}
+
+                            {isLoadingPhotos && (
+                                <div className="flex flex-wrap gap-2">
+                                    {Array.from({ length: 4 }).map((_, index) => (
+                                        <Skeleton
+                                            key={`photo-loading-${index}`}
+                                            className="w-20 h-20 rounded-lg"
+                                        />
+                                    ))}
+                                </div>
+                            )}
+
+                            {!isLoadingPhotos && photos.length === 0 && (
+                                <div className="w-full flex flex-col justify-center items-center gap-3">
+                                    <SelectCheckboxIllustration />
+                                    <Text variant="paragraph-medium" className="text-center">
+                                        No photos available for selection
+                                    </Text>
+                                </div>
+                            )}
+                        </div>
+                    </DialogBody>
+
+                    <DialogFooter>
+                        <DialogClose asChild>
+                            <Button variant="secondary" disabled={isCreatingAlbum}>
+                                Cancel
+                            </Button>
+                        </DialogClose>
+
+                        <Button type="submit" disabled={isCreatingAlbum} handling={isCreatingAlbum}>
+                            {isCreatingAlbum ? 'Creating...' : 'Create'}
                         </Button>
-                    </DialogClose>
-
-                    <Button type="submit" disabled={isCreatingAlbum} handling={isCreatingAlbum}>
-                        {isCreatingAlbum ? "Creating..." : "Create"}
-                    </Button>
-                </DialogFooter>
-            </form>
-        </DialogContent>
-    </Dialog>
-
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
 }

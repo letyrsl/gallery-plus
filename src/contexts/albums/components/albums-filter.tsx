@@ -1,12 +1,15 @@
-import type React from "react";
-import Button from "../../../components/button";
-import Text from "../../../components/text";
-import type { Album } from "../models/album";
-import cx from "classnames";
-import Skeleton from "../../../components/skeleton";
-import usePhotos from "../../photos/hooks/use-photos";
+import type React from 'react';
 
-interface AlbumsFilterProps extends React.ComponentProps<"div"> {
+import cx from 'classnames';
+
+import Button from '@src/components/button';
+import Skeleton from '@src/components/skeleton';
+import Text from '@src/components/text';
+import usePhotos from '@src/contexts/photos/hooks/use-photos';
+
+import type { Album } from '@src/contexts/albums/models/album';
+
+interface AlbumsFilterProps extends React.ComponentProps<'div'> {
     albums: Album[];
     loading?: boolean;
 }
@@ -15,24 +18,24 @@ export default function AlbumsFilter({ albums, loading, className, ...props }: A
     const { filters } = usePhotos();
 
     return (
-        <div className={cx("flex items-center gap-3.5 overflow-x-auto", className)} {...props}>
+        <div className={cx('flex items-center gap-3.5 overflow-x-auto', className)} {...props}>
             <Text variant="heading-small">Albums</Text>
 
             <div className="flex gap-3">
                 {!loading ? (
                     <>
                         <Button
-                            variant={filters.albumId === null ? "primary" : "ghost"}
+                            variant={filters.albumId === null ? 'primary' : 'ghost'}
                             size="sm"
                             className="cursor-pointer"
                             onClick={() => filters.setAlbumId(null)}
                         >
                             All
                         </Button>
-                        {albums.map(album => (
+                        {albums.map((album) => (
                             <Button
                                 key={album.id}
-                                variant={filters.albumId === album.id ? "primary" : "ghost"}
+                                variant={filters.albumId === album.id ? 'primary' : 'ghost'}
                                 size="sm"
                                 className="cursor-pointer"
                                 onClick={() => filters.setAlbumId(album.id)}

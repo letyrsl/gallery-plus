@@ -1,16 +1,21 @@
-import InputText from "./input-text";
-import SearchIcon from "../assets/icons/search.svg?react";
-import React from "react";
-import { debounce } from "../helpers/utils";
-import usePhotos from "../contexts/photos/hooks/use-photos";
+import React, { useMemo, useState } from 'react';
+
+import SearchIcon from '@src/assets/icons/search.svg?react';
+import usePhotos from '@src/contexts/photos/hooks/use-photos';
+import { debounce } from '@src/helpers/utils';
+
+import InputText from './input-text';
 
 export default function PhotosSearch() {
     const { filters } = usePhotos();
-    const [inputValue, setInputValue] = React.useState(filters.q);
+    const [inputValue, setInputValue] = useState(filters.q);
 
-    const debouncedSetValue = React.useCallback(
-        debounce((value: string) => filters.setQ(value), 200),
-        [filters.setQ]
+    const debouncedSetValue = useMemo(
+        () =>
+            debounce((value: string) => {
+                filters.setQ(value);
+            }, 200),
+        [filters],
     );
 
     function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -20,11 +25,13 @@ export default function PhotosSearch() {
         debouncedSetValue(value);
     }
 
-    return <InputText
-        icon={SearchIcon}
-        placeholder="Search photos"
-        className="flex-1"
-        value={inputValue}
-        onChange={handleInputChange}
-    />
+    return (
+        <InputText
+            icon={SearchIcon}
+            placeholder="Search photos"
+            className="flex-1"
+            value={inputValue}
+            onChange={handleInputChange}
+        />
+    );
 }

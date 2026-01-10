@@ -1,4 +1,4 @@
-import type { Album } from "../../albums/models/album";
+import type { Album } from '@src/contexts/albums/models/album';
 
 export interface Photo {
     id: string;

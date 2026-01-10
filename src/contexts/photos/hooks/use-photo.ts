@@ -1,10 +1,13 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { api, fetcher } from "../../../helpers/api";
-import type { Photo } from "../models/photo";
-import type { PhotoNewFormSchema } from "../schemas";
-import { toast } from "sonner";
-import usePhotoAlbums from "./use-photo-albums";
-import { useNavigate } from "react-router";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router';
+import { toast } from 'sonner';
+
+import { api, fetcher } from '@src/helpers/api';
+
+import usePhotoAlbums from './use-photo-albums';
+
+import type { Photo } from '@src/contexts/photos/models/photo';
+import type { PhotoNewFormSchema } from '@src/contexts/photos/schemas';
 
 interface PhotoDetailResponse extends Photo {
     nextPhotoId?: string;
@@ -15,7 +18,7 @@ export default function usePhoto(id?: string) {
     const navigate = useNavigate();
 
     const { data, isLoading } = useQuery<PhotoDetailResponse>({
-        queryKey: ["photo", id],
+        queryKey: ['photo', id],
         queryFn: () => fetcher(`/photos/${id}`),
         enabled: !!id,
     });
@@ -30,22 +33,26 @@ export default function usePhoto(id?: string) {
                 title: payload.title,
             });
 
-            await api.post(`/photos/${photo.id}/image`, {
-                file: payload.file[0],
-            }, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                }
-            });
+            await api.post(
+                `/photos/${photo.id}/image`,
+                {
+                    file: payload.file[0],
+                },
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                },
+            );
 
             if (payload.albumsIds && payload.albumsIds.length > 0) {
                 await managePhotoOnAlbum(photo.id, payload.albumsIds);
             }
 
             queryClient.invalidateQueries({ queryKey: ['photos'] });
-            toast.success("Photo created successfully");
+            toast.success('Photo created successfully');
         } catch (error) {
-            toast.error("Failed to create photo");
+            toast.error('Failed to create photo');
             throw error;
         }
     }
@@ -54,10 +61,10 @@ export default function usePhoto(id?: string) {
         try {
             await api.delete(`/photos/${photoId}`);
 
-            toast.success("Photo deleted successfully");
+            toast.success('Photo deleted successfully');
             navigate('/');
         } catch (error) {
-            toast.error("Failed to delete photo");
+            toast.error('Failed to delete photo');
             throw error;
         }
     }
@@ -69,5 +76,5 @@ export default function usePhoto(id?: string) {
         isLoadingPhoto: isLoading,
         createPhoto,
         deletePhoto,
-    }
+    };
 }
