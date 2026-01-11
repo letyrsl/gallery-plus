@@ -13,7 +13,8 @@
         "preview": "vite preview",
         "build-server": "tsc --noEmit -p tsconfig.server.json && tsup",
         "dev-server": "tsup --watch --onSuccess \"node server/dist/main.js\"",
-        "run-server": "node server/dist/main.js"
+        "run-server": "node server/dist/main.js",
+        "start": "concurrently \"npm run dev-server\" \"npm run dev\""
     },
     "dependencies": {
         "@fastify/cors": "8.5.0",
@@ -42,6 +43,7 @@
         "@types/react": "^19.1.2",
         "@types/react-dom": "^19.1.2",
         "@vitejs/plugin-react-swc": "^3.9.0",
+        "concurrently": "^9.2.1",
         "eslint": "^9.39.2",
         "eslint-config-prettier": "^10.1.8",
         "eslint-import-resolver-typescript": "^4.4.4",
